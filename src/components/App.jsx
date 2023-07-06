@@ -61,13 +61,9 @@ export class App extends Component {
     }
   }
 
-  handleFormSubmit = searchQuerry => {
+  onFormSubmit = searchQuerry => {
     this.setState({ searchQuerry });
   };
-
-  calculateTotalPages(totalHits, perPage) {
-    return Math.ceil(totalHits / perPage);
-  }
 
   onLoadMoreBtnClick = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
@@ -75,17 +71,18 @@ export class App extends Component {
 
   render() {
     const { showLoader, page, searchResults, totalHits } = this.state;
-    const totalPages = this.calculateTotalPages(totalHits, IMAGES_PER_PAGE);
+    const { onFormSubmit, onLoadMoreBtnClick } = this;
 
+    const totalPages = Math.ceil(totalHits / IMAGES_PER_PAGE);
     const showImageGallery = !!searchResults.length;
     const showLoadMoreBtn = !showLoader && totalPages > 1 && page < totalPages;
 
     return (
       <Container>
-        <Searchbar onSubmit={this.handleFormSubmit} />
+        <Searchbar onSubmit={onFormSubmit} />
         {showImageGallery && <ImageGallery searchResults={searchResults} />}
         {showLoader && <Loader />}
-        {showLoadMoreBtn && <Button handleClick={this.onLoadMoreBtnClick} />}
+        {showLoadMoreBtn && <Button onBtnClick={onLoadMoreBtnClick} />}
         <Toaster position="top-right" reverseOrder={false} />
       </Container>
     );

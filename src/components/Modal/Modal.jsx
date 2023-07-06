@@ -7,30 +7,27 @@ const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
   componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('keydown', this.onKeyDown);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('keydown', this.onKeyDown);
   }
 
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
+  onKeyDown = e => {
+    e.code === 'Escape' && this.props.onClose();
+  };
+
+  onBackdropClick = e => {
+    e.currentTarget === e.target && this.props.onClose();
   };
 
   render() {
-    const { largeImageURL, tags, onClose } = this.props;
+    const { largeImageURL, tags } = this.props;
+    const { onBackdropClick } = this;
 
     return createPortal(
-      <Overlay
-        onClick={e => {
-          if (e.currentTarget === e.target) {
-            onClose();
-          }
-        }}
-      >
+      <Overlay onClick={onBackdropClick}>
         <ModalImg src={largeImageURL} alt={tags} />
       </Overlay>,
       modalRoot
