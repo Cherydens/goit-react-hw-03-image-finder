@@ -19,15 +19,8 @@ class ImageGallery extends Component {
     isLoading: false,
   };
 
-  calculateTotalPages(totalHits, perPage) {
-    return Math.ceil(totalHits / perPage);
-  }
-
-  onLoadMoreBtnClick = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
-  };
-
   async componentDidUpdate(prevProps, prevState) {
+    const { page } = this.state;
     // New search querry
 
     const prevSearch = prevProps.searchQuerry;
@@ -36,7 +29,7 @@ class ImageGallery extends Component {
     if (prevSearch !== currentSearch) {
       this.setState({ isLoading: true, page: 1, searchResults: [] });
       API.searchParams.q = currentSearch;
-      API.searchParams.page = this.state.page;
+      API.searchParams.page = page;
 
       try {
         const data = await API.pixabayApiService(API.searchParams);
@@ -68,7 +61,7 @@ class ImageGallery extends Component {
     // Pagination
 
     const prevPage = prevState.page;
-    const currentPage = this.state.page;
+    const currentPage = page;
 
     if (prevPage < currentPage) {
       this.setState({ isLoading: true });
@@ -88,6 +81,14 @@ class ImageGallery extends Component {
       }
     }
   }
+
+  calculateTotalPages(totalHits, perPage) {
+    return Math.ceil(totalHits / perPage);
+  }
+
+  onLoadMoreBtnClick = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
+  };
 
   render() {
     const { searchResults, isLoading, totalPages, page } = this.state;

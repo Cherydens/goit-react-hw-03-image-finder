@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { Toaster } from 'react-hot-toast';
-import PropTypes from 'prop-types';
 
 import { Container } from './App.styled';
 import Searchbar from './Searchbar/Searchbar';
@@ -25,7 +24,3 @@ export class App extends Component {
     );
   }
 }
-
-App.propTypes = {
-  searchQuerry: PropTypes.string,
-};
