@@ -18,7 +18,7 @@ export class App extends Component {
     searchResults: [],
     totalHits: 0,
     page: 1,
-    isLoading: false,
+    showLoader: false,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -32,7 +32,7 @@ export class App extends Component {
       this.setState({ searchResults: [], totalHits: 0, page: 1 });
 
     if (isNextPage || isNewSearchQuerry) {
-      this.setState({ isLoading: true });
+      this.setState({ showLoader: true });
 
       try {
         const data = await pixabayApiService({
@@ -45,18 +45,18 @@ export class App extends Component {
           toast.error(
             `Sorry, there are no images matching your search query: ${searchQuerry}. Please try again. `
           );
-          this.setState({ isLoading: false });
+          this.setState({ showLoader: false });
           return;
         }
 
         this.setState(({ searchResults }) => ({
           searchResults: [...searchResults, ...data.hits],
           totalHits: data.totalHits,
-          isLoading: false,
+          showLoader: false,
         }));
       } catch (error) {
         toast.error(`Ooops! Something went wrong: "${error.message}"`);
-        this.setState({ isLoading: false });
+        this.setState({ showLoader: false });
       }
     }
   }
@@ -74,21 +74,18 @@ export class App extends Component {
   };
 
   render() {
-    const { isLoading, page, searchResults, totalHits } = this.state;
-
+    const { showLoader, page, searchResults, totalHits } = this.state;
     const totalPages = this.calculateTotalPages(totalHits, IMAGES_PER_PAGE);
 
-    const isRenderLoadMoreBtn =
-      !isLoading && totalPages > 1 && page < totalPages;
+    const showImageGallery = !!searchResults.length;
+    const showLoadMoreBtn = !showLoader && totalPages > 1 && page < totalPages;
 
     return (
       <Container>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery searchResults={searchResults} />
-        {isLoading && <Loader />}
-        {isRenderLoadMoreBtn && (
-          <Button handleClick={this.onLoadMoreBtnClick} />
-        )}
+        {showImageGallery && <ImageGallery searchResults={searchResults} />}
+        {showLoader && <Loader />}
+        {showLoadMoreBtn && <Button handleClick={this.onLoadMoreBtnClick} />}
         <Toaster position="top-right" reverseOrder={false} />
       </Container>
     );
