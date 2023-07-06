@@ -21,43 +21,50 @@ export class App extends Component {
     showLoader: false,
   };
 
-  async componentDidUpdate(_, prevState) {
+  componentDidUpdate(_, prevState) {
     const { searchQuerry, page } = this.state;
     const prevSearchQuerry = prevState.searchQuerry;
     const prevPage = prevState.page;
+
     const isNewSearchQuerry = searchQuerry !== prevSearchQuerry;
     const isNextPage = page !== prevPage;
 
-    isNewSearchQuerry &&
+    if (isNewSearchQuerry) {
       this.setState({ searchResults: [], totalHits: 0, page: 1 });
+    }
 
     if (isNextPage || isNewSearchQuerry) {
-      try {
-        this.setState({ showLoader: true });
-        const data = await pixabayApiService({
-          searchQuerry,
-          page,
-          IMAGES_PER_PAGE,
-        });
-
-        if (!data.totalHits) {
-          toast.error(
-            `Sorry, there are no images matching your search query: ${searchQuerry}. Please try again. `
-          );
-          return;
-        }
-
-        this.setState(({ searchResults }) => ({
-          searchResults: [...searchResults, ...data.hits],
-          totalHits: data.totalHits,
-        }));
-      } catch (error) {
-        toast.error(`Ooops! Something went wrong: "${error.message}"`);
-      } finally {
-        this.setState({ showLoader: false });
-      }
+      this.getImages();
     }
   }
+
+  getImages = async () => {
+    const { searchQuerry, page } = this.state;
+    try {
+      this.setState({ showLoader: true });
+      const { totalHits, hits } = await pixabayApiService({
+        searchQuerry,
+        page,
+        IMAGES_PER_PAGE,
+      });
+
+      if (!totalHits) {
+        toast.error(
+          `Sorry, there are no images matching your search query: ${searchQuerry}. Please try again. `
+        );
+        return;
+      }
+
+      this.setState(({ searchResults }) => ({
+        searchResults: [...searchResults, ...hits],
+        totalHits: totalHits,
+      }));
+    } catch ({ message }) {
+      toast.error(`Ooops! Something went wrong: "${message}"`);
+    } finally {
+      this.setState({ showLoader: false });
+    }
+  };
 
   onFormSubmit = searchQuerry => {
     this.setState({ searchQuerry });
