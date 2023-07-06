@@ -7,44 +7,26 @@ import { GalleryItem, GalleryItemImage } from './ImageGalleryItem.styled';
 
 class ImageGalleryItem extends Component {
   state = {
-    isModalOpen: false,
+    showModal: false,
   };
 
-  componentDidUpdate() {
-    const { isModalOpen } = this.state;
-    const { handleKeyDown } = this;
-    !!isModalOpen && window.addEventListener('keydown', handleKeyDown);
-    !isModalOpen && window.removeEventListener('keydown', handleKeyDown);
-  }
-
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.closeModal();
-    }
-  };
-
-  openModal = () => {
-    this.setState({ isModalOpen: true });
-  };
-
-  closeModal = e => {
-    this.setState({ isModalOpen: false });
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
   render() {
     const { webformatURL, largeImageURL, tags } = this.props.imageCard;
+    const { showModal } = this.state;
+    const { toggleModal } = this;
+
     return (
       <GalleryItem>
-        <GalleryItemImage
-          src={webformatURL}
-          alt={tags}
-          onClick={this.openModal}
-        />
-        {this.state.isModalOpen && (
+        <GalleryItemImage src={webformatURL} alt={tags} onClick={toggleModal} />
+        {showModal && (
           <Modal
             largeImageURL={largeImageURL}
             tags={tags}
-            onClose={this.closeModal}
+            onClose={toggleModal}
           />
         )}
       </GalleryItem>
