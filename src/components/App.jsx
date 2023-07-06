@@ -32,9 +32,8 @@ export class App extends Component {
       this.setState({ searchResults: [], totalHits: 0, page: 1 });
 
     if (isNextPage || isNewSearchQuerry) {
-      this.setState({ showLoader: true });
-
       try {
+        this.setState({ showLoader: true });
         const data = await pixabayApiService({
           searchQuerry,
           page,
@@ -45,17 +44,16 @@ export class App extends Component {
           toast.error(
             `Sorry, there are no images matching your search query: ${searchQuerry}. Please try again. `
           );
-          this.setState({ showLoader: false });
           return;
         }
 
         this.setState(({ searchResults }) => ({
           searchResults: [...searchResults, ...data.hits],
           totalHits: data.totalHits,
-          showLoader: false,
         }));
       } catch (error) {
         toast.error(`Ooops! Something went wrong: "${error.message}"`);
+      } finally {
         this.setState({ showLoader: false });
       }
     }
