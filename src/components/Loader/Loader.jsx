@@ -7,7 +7,7 @@ const Loader = () => (
     radius="9"
     color="#3f51b5"
     ariaLabel="three-dots-loading"
-    wrapperStyle={{ marginLeft: 'auto', marginRight: 'auto' }}
+    wrapperStyle={{}}
     wrapperClassName=""
     visible={true}
   />

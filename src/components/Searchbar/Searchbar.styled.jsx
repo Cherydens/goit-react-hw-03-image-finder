@@ -5,6 +5,7 @@ export const Header = styled.header`
   top: 0;
   left: 0;
   position: sticky;
+  width: 100%;
   z-index: 1100;
   display: flex;
   justify-content: center;
@@ -66,6 +67,7 @@ export const SearchFormInput = styled.input`
   width: 100%;
   font: inherit;
   font-size: 20px;
+  line-height: normal;
   border: none;
   outline: none;
   padding-left: 4px;
