@@ -16,7 +16,7 @@ class Searchbar extends Component {
   };
 
   onSearchQuerryChange = e => {
-    this.setState({ searchQuerry: e.target.value.toLowerCase() });
+    this.setState({ searchQuerry: e.target.value });
   };
 
   onSubmit = e => {
@@ -26,7 +26,7 @@ class Searchbar extends Component {
       toast.error("Sorry, your search query can't be empty. Please try again.");
       return;
     }
-    this.props.onSubmit(this.state.searchQuerry.trim());
+    this.props.onSubmit(this.state.searchQuerry.toLowerCase().trim());
     this.setState({ searchQuerry: '' });
   };
 

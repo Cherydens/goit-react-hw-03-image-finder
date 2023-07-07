@@ -8,8 +8,8 @@ const ImageGallery = ({ searchResults }) => {
   return (
     searchResults && (
       <Gallery>
-        {searchResults.map((imageCard, index) => (
-          <ImageGalleryItem key={index} imageCard={imageCard} />
+        {searchResults.map(({ id, ...restProps }) => (
+          <ImageGalleryItem key={id} imageCard={restProps} />
         ))}
       </Gallery>
     )
@@ -19,5 +19,7 @@ const ImageGallery = ({ searchResults }) => {
 export default ImageGallery;
 
 ImageGallery.propTypes = {
-  searchResults: PropTypes.array.isRequired,
+  searchResults: PropTypes.arrayOf(
+    PropTypes.shape({ id: PropTypes.number.isRequired })
+  ).isRequired,
 };

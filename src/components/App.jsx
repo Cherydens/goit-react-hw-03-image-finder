@@ -29,10 +29,6 @@ export class App extends Component {
     const isNewSearchQuerry = searchQuerry !== prevSearchQuerry;
     const isNextPage = page !== prevPage;
 
-    if (isNewSearchQuerry) {
-      this.setState({ searchResults: [], totalHits: 0, page: 1 });
-    }
-
     if (isNextPage || isNewSearchQuerry) {
       this.getImages();
     }
@@ -67,7 +63,18 @@ export class App extends Component {
   };
 
   onFormSubmit = searchQuerry => {
-    this.setState({ searchQuerry });
+    if (this.state.searchQuerry === searchQuerry) {
+      toast.error(
+        `Sorry, your previos search query was "${searchQuerry}". Please try again.`
+      );
+      return;
+    }
+    this.setState({
+      searchQuerry,
+      searchResults: [],
+      totalHits: 0,
+      page: 1,
+    });
   };
 
   onLoadMoreBtnClick = () => {
