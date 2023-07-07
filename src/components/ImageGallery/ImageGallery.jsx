@@ -20,6 +20,9 @@ export default ImageGallery;
 
 ImageGallery.propTypes = {
   searchResults: PropTypes.arrayOf(
-    PropTypes.shape({ id: PropTypes.number.isRequired })
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      restProps: PropTypes.object,
+    })
   ).isRequired,
 };
